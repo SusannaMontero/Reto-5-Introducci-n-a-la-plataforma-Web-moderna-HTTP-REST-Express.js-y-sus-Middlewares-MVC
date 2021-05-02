@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+// Añadido
+var path = require('path'); //importa el módulo path de gestión de rutas
+
 // Import MW for parsing POST params in BODY
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,16 +26,16 @@ const Quiz = sequelize.define( // define Quiz model (table quizzes)
     }
 );
 
-(async () => {  // IIFE - Immediatedly Invoked Function Expresión
+(async() => { // IIFE - Immediatedly Invoked Function Expresión
     try {
         await sequelize.sync(); // Syncronize DB and seed if needed
         const count = await Quiz.count();
         if (count === 0) {
             const c = await Quiz.bulkCreate([
-                {question: "Capital of Italy", answer: "Rome"},
-                {question: "Capital of France", answer: "Paris"},
-                {question: "Capital of Spain", answer: "Madrid"},
-                {question: "Capital of Portugal", answer: "Lisbon"}
+                { question: "Capital of Italy", answer: "Rome" },
+                { question: "Capital of France", answer: "Paris" },
+                { question: "Capital of Spain", answer: "Madrid" },
+                { question: "Capital of Portugal", answer: "Lisbon" }
             ]);
             console.log(`DB filled with ${c.length} quizzes.`);
         } else {
@@ -155,7 +158,7 @@ const editView = (quiz) => {
 // ========== CONTROLLERs ==========
 
 // GET /, GET /quizzes
-const indexController = async (req, res, next) => {
+const indexController = async(req, res, next) => {
     try {
         const quizzes = await Quiz.findAll()
         res.send(indexView(quizzes))
@@ -165,7 +168,7 @@ const indexController = async (req, res, next) => {
 };
 
 //  GET  /quizzes/:id/play
-const playController = async (req, res, next) => {
+const playController = async(req, res, next) => {
     const id = Number(req.params.id);
     if (Number.isNaN(id)) return next(new Error(`"${req.params.id}" should be number.`));
 
@@ -181,7 +184,7 @@ const playController = async (req, res, next) => {
 };
 
 //  GET  /quizzes/:id/check
-const checkController = async (req, res, next) => {
+const checkController = async(req, res, next) => {
     const response = req.query.response;
 
     const id = Number(req.params.id);
@@ -190,9 +193,9 @@ const checkController = async (req, res, next) => {
     try {
         const quiz = await Quiz.findByPk(id);
         if (!quiz) return next(new Error(`Quiz ${id} not found.`));
-        let msg = (quiz.answer.toLowerCase().trim() === response.toLowerCase().trim())
-            ? `Yes, "${response}" is the ${quiz.question}`
-            : `No, "${response}" is not the ${quiz.question}`;
+        let msg = (quiz.answer.toLowerCase().trim() === response.toLowerCase().trim()) ?
+            `Yes, "${response}" is the ${quiz.question}` :
+            `No, "${response}" is not the ${quiz.question}`;
         res.send(resultView(id, msg, response));
     } catch (err) {
         next(err)
@@ -200,17 +203,17 @@ const checkController = async (req, res, next) => {
 };
 
 // GET /quizzes/new
-const newController = async (req, res, next) => {
-    const quiz = {question: "", answer: ""};
+const newController = async(req, res, next) => {
+    const quiz = { question: "", answer: "" };
     res.send(newView(quiz));
 };
 
 // POST /quizzes
-const createController = async (req, res, next) => {
-    const {question, answer} = req.body;
+const createController = async(req, res, next) => {
+    const { question, answer } = req.body;
 
     try {
-        await Quiz.create({question, answer});
+        await Quiz.create({ question, answer });
         res.redirect(`/quizzes`);
     } catch (err) {
         next(err)
@@ -259,5 +262,8 @@ app.use((error, req, res, next) => {
     res.redirect("/");
 });
 
+// Añadido
+app.use(express.static(path.join(_dirname, 'public'))); // crea ruta absoluta al directorio del repositorio de recursos (public).
+
 // Server started at port 8000
-app.listen(8000);
+app.listen(8080); // modifico 8000 por 8080, conecta la aplicaciónexpress al puerto 8080 para que responda a las solicitudes que llegan a ese punto.
