@@ -153,6 +153,29 @@ const newView = quiz => {
 // View to show a form to edit a given quiz.
 const editView = (quiz) => {
     // .... introducir código
+    return `<!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Quiz</title>
+      ${style}
+    </head>
+    <body>
+      <h1>Edit Quiz</h1>
+      <form method="POST" action="/quizzes/<%= quiz.id %>?_method=put">
+        <label for="preg" class="rem">Pregunta:</label>
+        <input type="text" id="preg" name="quiz[pregunta]" value="<%= quiz.pregunta %>"/>
+        <label for="resp" class="rem">Respuesta:</label>
+        <input type="text" id="resp" name="quiz[respuesta]" value="<%= quiz.respuesta %>"/>
+        <a href="/quizes"><button type="button">Cancelar</button></a>
+        <input type="submit" value="Salvar">
+      </form>
+      
+      <br>
+      <a href="/quizzes" class="button">Go back</a>
+    </body>
+    </html>`;
+
 }
 
 
