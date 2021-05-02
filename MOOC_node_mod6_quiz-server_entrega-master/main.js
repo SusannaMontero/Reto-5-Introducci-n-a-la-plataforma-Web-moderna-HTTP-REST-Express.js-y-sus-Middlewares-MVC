@@ -15,6 +15,7 @@ app.use(methodOverride('_method', { methods: ["POST", "GET"] }));
 // ========== MODEL ==========
 
 const Sequelize = require('sequelize');
+const { request } = require('express');
 
 const options = { logging: false, operatorsAliases: false };
 const sequelize = new Sequelize("sqlite:db.sqlite", options);
@@ -247,8 +248,13 @@ app.post('/quizzes', createController);
 
 // ..... crear rutas e instalar los MWs para:
 //   GET  /quizzes/:id/edit
+app.get('/quizzes/: id/edit', editController);
+
 //   PUT  /quizzes/:id
+app.get('/quizzes/: id/update', updateController);
+
 //   DELETE  /quizzes/:id
+app.get('/quizzes/: id/delete', destroyController);
 
 
 app.all('*', (req, res) =>
