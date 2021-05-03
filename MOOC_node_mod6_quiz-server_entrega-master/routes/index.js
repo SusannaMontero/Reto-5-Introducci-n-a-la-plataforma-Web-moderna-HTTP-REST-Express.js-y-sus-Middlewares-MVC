@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
 
 // Añadido
 // Definición de rutas de /quizes
-router.get('/quizes/:quizID(\\d+)/edit,   quizController.edit');
+router.get('/quizes/:quizID(\\d+)/edit', quizController.edit);
+router.put('/quizes/:quizID(\\d+)', quizController.update);
 
 
 module.exports = router;
